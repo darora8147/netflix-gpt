@@ -7,11 +7,18 @@ import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
+  const dispatch = useDispatch();
+  
+  const navigate = useNavigate();
 
   const nameRef = useRef(null);
   const emailRef = useRef(null);
@@ -38,7 +45,21 @@ const Login = () => {
       )
         .then((userCredential) => {
           const user = userCredential.user;
-          console.log("user", user);
+          updateProfile(auth.currentUser, {
+            displayName: nameRef.current.value,
+            photoURL: "https://img.freepik.com/premium-photo/cute-anime-boy-wallpaper_776894-110627.jpg?semt=ais_rp_progressive&w=740&q=80",
+          })
+            .then(() => {
+              // Profile updated!
+             const {uid, email, displayName, photoURL} = auth.currentUser;
+             dispatch(addUser({uid: uid, email: email, displayName: displayName, photoURL: photoURL}));
+
+              navigate("/browse");
+            })
+            .catch((error) => {
+              // An error occurred
+              setErrorMessage(error.message)
+            });
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -71,7 +92,7 @@ const Login = () => {
     } else {
       // Sign In Logic
 
-    // Below is the code for sign-in user by Email/Password Sign-In Method
+      // Below is the code for sign-in user by Email/Password Sign-In Method
       signInWithEmailAndPassword(
         auth,
         emailRef?.current?.value,
@@ -81,6 +102,7 @@ const Login = () => {
           // Signed in
           const user = userCredential.user;
           console.log("user signed In Successfully", user);
+          navigate("/browse");
           // ...
         })
         .catch((error) => {
@@ -89,10 +111,6 @@ const Login = () => {
           setErrorMessage(errorCode + "-" + errorMessage);
         });
     }
-  };
-
-  const signIpUsingGmail = () => {
-    
   };
 
   const toggleSignInForm = () => {
@@ -144,17 +162,14 @@ const Login = () => {
         >
           {isSignInForm ? "Sign In" : "Sign Up"}
         </button>
-        <h2 className="py-4 cursor-pointer hover:underline" onClick={toggleSignInForm}>
+        <h2
+          className="py-4 cursor-pointer hover:underline"
+          onClick={toggleSignInForm}
+        >
           {" "}
           {isSignInForm
             ? "New to Netflix? Sign Up Now"
             : "Already Registered? Sign In Now"}
-        </h2>
-         <h2 className="py-4 cursor-pointer hover:underline" onClick={signIpUsingGmail}>
-          {" "}
-          {isSignInForm
-            ? ""
-            : "Sign Up using Gmail"}
         </h2>
       </form>
     </div>

@@ -11,6 +11,9 @@
 - Setup Firebase
 - Deploying Web app on the server
 - Create Sign Up User Account
+- Implment Sign In User Api
+- Created Redux Store with userSlice
+
 
 
 # Features
