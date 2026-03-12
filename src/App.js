@@ -1,9 +1,9 @@
-import logo from './logo.svg';
+import Body from "./components/Body";
 
 function App() {
   return (
-    <div className="font-bold text-center text-3xl">
-      Lets Build Netflix GPT from scratch!!!
+    <div>
+      <Body />
     </div>
   );
 }
