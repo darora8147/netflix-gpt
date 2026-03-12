@@ -13,7 +13,9 @@
 - Create Sign Up User Account
 - Implment Sign In User Api
 - Created Redux Store with userSlice
-
+- Implemented SignOut
+- Updated Profile Api
+- Navigate to another URL
 
 
 # Features
