@@ -1,25 +1,21 @@
 import { useRef, useState } from "react";
 import Header from "./Header";
 import { checkValidData } from "../utils/Validate";
-import { auth, provider } from "../utils/firebase";
+import { auth } from "../utils/firebase";
 import {
-  signInWithPopup,
-  GoogleAuthProvider,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
+import { AVTAR_LOGO } from "../utils/constant";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
   const dispatch = useDispatch();
   
-  const navigate = useNavigate();
-
   const nameRef = useRef(null);
   const emailRef = useRef(null);
   const pwdRef = useRef(null);
@@ -47,14 +43,12 @@ const Login = () => {
           const user = userCredential.user;
           updateProfile(auth.currentUser, {
             displayName: nameRef.current.value,
-            photoURL: "https://img.freepik.com/premium-photo/cute-anime-boy-wallpaper_776894-110627.jpg?semt=ais_rp_progressive&w=740&q=80",
+            photoURL: AVTAR_LOGO,
           })
             .then(() => {
               // Profile updated!
              const {uid, email, displayName, photoURL} = auth.currentUser;
              dispatch(addUser({uid: uid, email: email, displayName: displayName, photoURL: photoURL}));
-
-              navigate("/browse");
             })
             .catch((error) => {
               // An error occurred
@@ -101,9 +95,6 @@ const Login = () => {
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-          console.log("user signed In Successfully", user);
-          navigate("/browse");
-          // ...
         })
         .catch((error) => {
           const errorCode = error.code;
