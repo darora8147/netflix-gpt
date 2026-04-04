@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { addUser, removeUser } from "../utils/userSlice";
 import { LOGO, SUPPORTED_LANGUAGE } from "../utils/constant";
-import { handleGptSearchToggleView } from "../utils/gptSearchSlice";
+import { clearGptMoviesResult, handleGptSearchToggleView } from "../utils/gptSearchSlice";
 import { changeLanguage } from "../utils/configSlice";
 import { lang } from "../utils/langConstant";
 
@@ -27,12 +27,15 @@ const Header = () => {
 
   const handleGptSearchToggle = () => {
     dispatch(handleGptSearchToggleView());
+    if(!showGptSearch){
+      dispatch(clearGptMoviesResult());
+    }
   }
 
   const handleLanguageChange = (e) => {
     dispatch(changeLanguage(e.target.value));
   }
-
+  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
